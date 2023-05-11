@@ -33,7 +33,10 @@ def on_json_loading_failed_return_dict(e):
 @app.route('/ordrcpt', methods=['POST'])
 def ordrcpt():
 
+    auth2 = request.headers.get('Authorization')
 
+    if(auth2 != auth.key):
+        return Response('Unauthorized', 401)
 
     params = request.get_json(silent=True)
     
@@ -204,7 +207,10 @@ def ordrcpt():
 @app.route('/rcpt', methods=['POST'])
 def rcpt():
 
+    auth2 = request.headers.get('Authorization')
 
+    if(auth2 != auth.key):
+        return Response('Unauthorized', 401)
     
     params = request.get_json(silent=True)
     
@@ -314,7 +320,10 @@ def rcpt():
 @app.route('/delrcpt', methods=['POST'])
 def delrcpt():
 
-    
+    auth2 = request.headers.get('Authorization')
+
+    if(auth2 != auth.key):
+        return Response('Unauthorized', 401)
 
     params = request.get_json(silent=True)
 
@@ -401,7 +410,11 @@ def delrcpt():
 @app.route('/delivery', methods=['POST'])
 def delivery():
 
+    auth2 = request.headers.get('Authorization')
 
+    if(auth2 != auth.key):
+        return Response('Unauthorized', 401)
+    
     params = request.get_json(silent=True)
 
     if(params == None):
@@ -482,7 +495,11 @@ def delivery():
 @app.route('/orddel', methods=['POST'])
 def orddel():
 
+    auth2 = request.headers.get('Authorization')
 
+    if(auth2 != auth.key):
+        return Response('Unauthorized', 401)
+    
     params = request.get_json(silent=True)
 
     if(params == None):
@@ -575,7 +592,25 @@ def orddel():
     return jsonify(response)
 
 
+api = Api(app)
 
+class reservchk(Resource):
+    def get(self):
+        json = {
+            "id": auth.id,
+            "password": auth.pw
+        }
+        encoded = jwt.encode(json, "secret", algorithm="HS256")
+        return encoded, 200
+
+api.add_resource(reservchk, '/auth')
+
+
+class rchk(Resource):
+    def get(self):
+        return "ok", 200
+
+api.add_resource(rchk, '/rcpts')
 
 
 
