@@ -547,10 +547,13 @@ def orddel():
             response['FailList'] = FailList
 
         elif(result[0]['Status'] == 10):
-            query = "UPDATE tbl_Cellex_Data SET OrderStatus = 2 WHERE PackageNo = %s"
+            #query = "UPDATE tbl_Cellex_Data SET OrderStatus = 2 WHERE PackageNo = %s"
+            query = "DELETE FROM tbl_Cellex_Data WHERE PackageNo = %s"
             dbconn.db_else_by_q(query, list_item)
 
-            query = "UPDATE tbl_Cellex_Tracking SET Status = 0, StatusDesc = '주문삭제' WHERE PackageNo = %s"
+            #query = "UPDATE tbl_Cellex_Tracking SET Status = 0, StatusDesc = '주문삭제' WHERE PackageNo = %s"
+            query = "DELETE FROM tbl_Cellex_Tracking WHERE PackageNo = %s"
+
             dbconn.db_else_by_q(query, list_item)
 
             DeleteList.append({
